@@ -92,7 +92,7 @@ jobs:
         uses: azure/aks-set-context@v3
         with:
           resource-group: 'teste'
-          cluster-name: 'rbac-cluster'
+          cluster-name: 'aks-cert-lets'
           admin: 'false'
 
       - name: Run kubectl
