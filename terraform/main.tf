@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-aks-cert-letencrypt"
+  name     = "rg-aks-cert-letencryptT"
   location = "eastus2"
 }
 
