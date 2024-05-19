@@ -1,0 +1,79 @@
+#Login no azure
+az login 
+
+# Variaveis
+export rg=rg-aks-cert-letencrypt
+export local=eastus2
+export aks=aks-cert-lets
+export sku=Standard_B2s
+
+#Criar Grupo de recursos
+az group create -n $rg -l $local
+
+#Provisionar AKS Cluster
+az aks create -g $rg -n $aks --node-vm-size $sku --node-count 1
+
+#Obter credencias do Cluster
+az aks get-credentials -g $rg -n $aks
+
+#Criar Namespace
+kubectl create namespace ingress
+kubectl create namespace cert-manager
+kubectl create namespace application
+
+#Adicionar repositorios HELM
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+#Ip do LoadBalancer
+export ip=52.252.30.158
+
+#Usar Helm para fazer deploy do  NGINX ingress controller
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+    --namespace ingress \
+    --set controller.replicaCount=1 \
+    --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+    --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+    --set controller.service.externalTrafficPolicy=Local \
+    --set controller.service.loadBalancerIP="$ip" 
+
+
+#Instalação cert-manager
+
+#Desativar validacao de recurso do cert-manager
+kubectl label namespace cert-manager cert-manager.io/disable-validation=true
+
+#Adicionar Jetstack no repositorios Helm
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+#Instalar os CRDs 
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.1/cert-manager.crds.yaml
+
+
+#Instalar cert-manager helm charts
+helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2 
+
+#Criar CA Cluster Issuer
+kubectl apply -f cluster-issuer.yaml -n cert-manager
+
+#Aplicacao demo 
+
+#Aplicar service
+kubectl apply -f service/app1.yaml -n application
+
+#Aplicar deployment
+kubectl apply -f deployment/deployment.yaml -n application
+
+#Aplicar ingress
+kubectl apply -f ingress/ingress-app1.yaml -n application
+
+
+
+
+
+
+
+
+
+
