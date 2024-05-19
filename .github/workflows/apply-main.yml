@@ -59,10 +59,10 @@ jobs:
       - name: Coletando informações do AKS
         id: set_aks
         run: |
-          CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+          CLUSTER_NAME=$(terraform output -json | jq -r '.aks_cluster_name.value')
           echo "::set-output name=aks_cluster_name::$CLUSTER_NAME"
 
-          GROUP_NAME=$(terraform output -raw resource_group_name )
+          GROUP_NAME=$(terraform output -json | jq -r '.resource_group_name.value')
           echo "::set-output name=resource_group_name::$GROUP_NAME"
 
   kubectl-setup:
@@ -73,7 +73,9 @@ jobs:
     steps:
       - name: Obtém credencias do cluster AKS criado
         run: |
-          az aks get-credentials -g ${{ needs.plan-dev.outputs.output2 }} -n ${{ needs.plan-dev.outputs.output1 }}
+          group_name=$(echo "${{ needs.plan-dev.outputs.output2 }}" | cut -d "=" -f 2 | xargs)
+          cluster_name=$(echo "${{ needs.plan-dev.outputs.output1 }}" | cut -d "=" -f 2 | xargs)
+          az aks get-credentials -g "$group_name" -n "$cluster_name"
 
       - name: Install Kubectl
         run: |
