@@ -59,10 +59,10 @@ jobs:
       - name: Coletando informações do AKS
         id: set_aks
         run: |
-          CLUSTER_NAME=$(terraform output -json | jq -r '.aks_cluster_name.value')
+          CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
           echo "::set-output name=aks_cluster_name::$CLUSTER_NAME"
 
-          GROUP_NAME=$(terraform output -json | jq -r '.resource_group_name.value')
+          GROUP_NAME=$(terraform output -raw resource_group_name)
           echo "::set-output name=resource_group_name::$GROUP_NAME"
 
   kubectl-setup:
