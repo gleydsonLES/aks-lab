@@ -63,10 +63,10 @@ jobs:
       - name: Coletando informações do AKS
         id: set_aks
         run: |
-          CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+          CLUSTER_NAME=$(terraform output aks_cluster_name)
           echo "::set-output name=aks_cluster_name::$CLUSTER_NAME"
 
-          GROUP_NAME=$(terraform output -raw resource_group_name)
+          GROUP_NAME=$(terraform output resource_group_name)
           echo "::set-output name=resource_group_name::$GROUP_NAME"
 
   kubectl-setup:
@@ -91,8 +91,8 @@ jobs:
         id: set-context
         uses: azure/aks-set-context@v3
         with:
-          resource-group: 'teste'
-          cluster-name: 'aks-cert-lets'
+          resource-group: ${{ needs.plan-dev.outputs.output2 }}
+          cluster-name: ${{ needs.plan-dev.outputs.output1 }}
           admin: 'false'
 
       - name: Run kubectl
