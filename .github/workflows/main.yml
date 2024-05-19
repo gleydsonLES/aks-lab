@@ -35,7 +35,7 @@ jobs:
 
     - name: Create AKS cluster
       run: |
-        az aks create --resource-group ${{ env.RG }} --name ${{ env.AKS }} --node-vm-size ${{ env.SKU }} --node-count 1
+        az aks create --resource-group ${{ env.RG }} --name ${{ env.AKS }} --node-vm-size ${{ env.SKU }} --node-count 1 --generate-ssh-keys
 
     
     
