@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "teste1"
+  name     = "teste"
   location = "eastus2"
 }
 
