@@ -21,4 +21,17 @@ jobs:
     - name: Run Azure CLI command
       run: |
         az account show
-        # Adicione os comandos do Azure CLI que você precisa aqui
+
+    - name: Set up environment variables
+      run: |
+        echo "RG=rg-aks-cert-letencrypt" >> $GITHUB_ENV
+        echo "LOCATION=eastus2" >> $GITHUB_ENV
+        echo "AKS=aks-cert-lets" >> $GITHUB_ENV
+        echo "SKU=Standard_B2s" >> $GITHUB_ENV
+
+    - name: Create resource group
+      run: |
+        az group create --name ${{ env.RG }} --location ${{ env.LOCATION }}
+
+    
+    
