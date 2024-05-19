@@ -24,6 +24,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   tags = {
-    environment = "lab"
+    environment = "labb"
   }
 }
