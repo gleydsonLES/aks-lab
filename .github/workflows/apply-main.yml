@@ -73,7 +73,7 @@ jobs:
     steps:
       - name: Obtém credencias do cluster AKS criado
         run: |
-          az aks get-credentials -g ${{ needs.plan-dev.outputs.output2 }} -n ${{ needs.plan-dev.outputs.output1 }}
+          az aks get-credentials -g ${{ needs.plan-dev.outputs.resource_group_name }} -n ${{ needs.plan-dev.outputs.aks_cluster_name }}
 
       - name: Install Kubectl
         run: |
