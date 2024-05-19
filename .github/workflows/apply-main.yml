@@ -1,4 +1,4 @@
-name: Plan EC2
+name: Apply AKS
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   plan-dev:
-    name: 'Terraform APPLY [Criando vm EC2]'
+    name: 'Terraform APPLY [Criando AKS]'
     runs-on: ubuntu-latest
     env:
       TF_WORKING_DIR: 'terraform'
