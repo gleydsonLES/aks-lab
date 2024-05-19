@@ -37,7 +37,7 @@ jobs:
       run: |
         az aks create --resource-group ${{ env.RG }} --name ${{ env.AKS }} --node-vm-size ${{ env.SKU }} --node-count 1 --generate-ssh-keys
 
-    - name: Obter crendencias
+    - name: Obter Crendencias
       run: |
           az aks get-credentials -g ${{ env.RG }} -n ${{ env.AKS }}
 
