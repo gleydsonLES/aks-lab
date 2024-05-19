@@ -12,8 +12,8 @@ jobs:
     name: 'Terraform APPLY [Criando AKS]'
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.set_aks.outputs.aks_cluster_name }}
-      output2: ${{ steps.set_aks.outputs.resource_group_name }}
+      aks_cluster_name: ${{ steps.capture_outputs.outputs.aks_cluster_name }}
+      resource_group_name: ${{ steps.capture_outputs.outputs.resource_group_name }}
     env:
       TF_WORKING_DIR: 'terraform'
 
@@ -61,13 +61,10 @@ jobs:
         run: terraform output
 
       - name: Coletando informações do AKS
-        id: set_aks
+        id: capture_outputs
         run: |
-          CLUSTER_NAME=$(terraform output -raw aks_cluster_name | tr -d '"')
-          echo "::set-output name=aks_cluster_name::$CLUSTER_NAME""
-
-          GROUP_NAME=$(terraform output -raw resource_group_name | tr -d '"')
-          echo "::set-output name=resource_group_name::$GROUP_NAME"
+          outputs=$(terraform output -json)
+          echo "::set-output name=outputs::$outputs" 
 
   kubectl-setup:
     name: 'Instalação do kubectl'
@@ -91,8 +88,8 @@ jobs:
         id: set-context
         uses: azure/aks-set-context@v3
         with:
-          resource-group: ${{ needs.plan-dev.outputs.output2 }}
-          cluster-name: ${{ needs.plan-dev.outputs.output1 }}
+          resource-group: ${{ needs.plan-dev.outputs.resource_group_name }}
+          cluster-name: ${{ needs.plan-dev.outputs.aks_cluster_name }}
           admin: 'false'
 
       - name: Run kubectl
