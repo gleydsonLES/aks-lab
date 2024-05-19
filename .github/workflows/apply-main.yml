@@ -81,26 +81,20 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Run Azure CLI command
-        run: |
-          az account show
+      - name: 'Run basic AZ CLI command'
+        run: az group list
 
-      - name: Azure CLI script
-        uses: azure/CLI@v1
+      - uses: azure/setup-kubectl@v3
+        name: Setup kubectl
+
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
         with:
-          azcliversion: 2.60.0
-          inlineScript: |
-            group_name=$(echo "${{ needs.plan-dev.outputs.output2 }}" | cut -d "=" -f 2 | xargs)
-            cluster_name=$(echo "${{ needs.plan-dev.outputs.output1 }}" | cut -d "=" -f 2 | xargs)
-            az aks get-credentials -g "$group_name" -n "$cluster_name"
+          resource-group: 'teste'
+          cluster-name: 'rbac-cluster'
+          admin: 'false'
 
-
-      - name: Install Kubectl
+      - name: Run kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          mv ./kubectl /usr/local/bin
-
-      - name: List All PODS
-        run: |
-          kubectl get po -ALL
+          kubectl get pods -ALL
