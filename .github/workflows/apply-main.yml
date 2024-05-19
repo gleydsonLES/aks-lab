@@ -12,8 +12,8 @@ jobs:
     name: 'Terraform APPLY [Criando AKS]'
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.set_ip.outputs.aks_cluster_name }}
-      output2: ${{ steps.set_ip.outputs.resource_group_name }}
+      output1: ${{ steps.set_aks.outputs.aks_cluster_name }}
+      output2: ${{ steps.set_aks.outputs.resource_group_name }}
     env:
       TF_WORKING_DIR: 'terraform'
 
