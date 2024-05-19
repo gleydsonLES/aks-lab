@@ -31,9 +31,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Run Azure CLI command
-        run: |
-          az account show
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.60.0
+          inlineScript: |
+            az account show
+            
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -80,12 +84,16 @@ jobs:
       - name: Run Azure CLI command
         run: |
           az account show
-          
-      - name: Obtém credencias do cluster AKS criado
-        run: |
-          group_name=$(echo "${{ needs.plan-dev.outputs.output2 }}" | cut -d "=" -f 2 | xargs)
-          cluster_name=$(echo "${{ needs.plan-dev.outputs.output1 }}" | cut -d "=" -f 2 | xargs)
-          az aks get-credentials -g "$group_name" -n "$cluster_name"
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.60.0
+          inlineScript: |
+            group_name=$(echo "${{ needs.plan-dev.outputs.output2 }}" | cut -d "=" -f 2 | xargs)
+            cluster_name=$(echo "${{ needs.plan-dev.outputs.output1 }}" | cut -d "=" -f 2 | xargs)
+            az aks get-credentials -g "$group_name" -n "$cluster_name"
+
 
       - name: Install Kubectl
         run: |
