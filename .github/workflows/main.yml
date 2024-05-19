@@ -33,5 +33,9 @@ jobs:
       run: |
         az group create --name ${{ env.RG }} --location ${{ env.LOCATION }}
 
+    - name: Create AKS cluster
+      run: |
+        az aks create --resource-group ${{ env.RG }} --name ${{ env.AKS }} --node-vm-size ${{ env.SKU }} --node-count 1
+
     
     
