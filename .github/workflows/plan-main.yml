@@ -1,4 +1,4 @@
-name: Plan EC2
+name: Plan AKS
 
 on:
   pull_request:
