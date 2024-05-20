@@ -172,17 +172,17 @@ jobs:
 
       - name: Apply Services
         run: |
-          kubectl apply -f ${{ github.workspace }}service/app1.yaml -n application
-          kubectl apply -f ${{ github.workspace }}service/app2.yaml -n application
+          kubectl apply -f ${{ github.workspace }}/service/app1.yaml -n application
+          kubectl apply -f ${{ github.workspace }}/service/app2.yaml -n application
 
       - name: Apply Deployment
         run: |
-          kubectl apply -f ${{ github.workspace }}deployment/deployment.yaml -n application
-          kubectl apply -f ${{ github.workspace }}deployment/deployment2.yaml -n application
+          kubectl apply -f ${{ github.workspace }}/deployment/deployment.yaml -n application
+          kubectl apply -f ${{ github.workspace }}/deployment/deployment2.yaml -n application
 
       - name: Apply Ingress
         run: |
-          kubectl apply -f ${{ github.workspace }}ingress/ingress-app1.yaml -n application
+          kubectl apply -f ${{ github.workspace }}/ingress/ingress-app1.yaml -n application
 
       - name: Listar todas pods
         run: |
