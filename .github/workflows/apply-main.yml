@@ -87,21 +87,18 @@ jobs:
       - plan-dev
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout git clone do repo
         uses: actions/checkout@v2
 
-      - name: Log in to Azure
+      - name: Log no azure Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 'Run basic AZ CLI command'
-        run: az group list
-
       - uses: azure/setup-kubectl@v3
         name: Setup kubectl
 
-      - name: Set AKS context
+      - name: Setar contexto do cluster AKS
         id: set-context
         uses: azure/aks-set-context@v3
         with:
@@ -109,13 +106,13 @@ jobs:
           cluster-name: ${{ needs.plan-dev.outputs.output1 }}
           admin: 'false'
 
-      - name: Create NS
+      - name: Criar NameSpace [ingress, cert-manager e application]
         run: |
           kubectl create namespace ingress
           kubectl create namespace cert-manager
           kubectl create namespace application
 
-      - name: Install Helm
+      - name: Instalação do Helm
         run: |
           curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
           chmod 700 get_helm.sh
@@ -124,9 +121,6 @@ jobs:
       - name: Add ingress-nginx Helm Repo
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-
-      - name: Update Helm Repos
-        run: |
           helm repo update
 
       - name: Export IP
@@ -153,41 +147,41 @@ jobs:
         run: |
           kubectl label namespace cert-manager cert-manager.io/disable-validation=true
 
-      - name: Desativar validacao de recurso do cert-manager
+      - name: Add repo jetstack
         run: |
           helm repo add jetstack https://charts.jetstack.io
           helm repo update
       
-      # - name: Instalar os CRDs 
-      #   run: |
-      #     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.1/cert-manager.crds.yaml
+      - name: Instalar os CRDs 
+        run: |
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.1/cert-manager.crds.yaml
 
-      # - name: Instalar cert-manager helm charts
-      #   run: |
-      #     helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2
+      - name: Instalar cert-manager helm charts
+        run: |
+          helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2
 
-      # - name: List files in GITHUB_WORKSPACE
-      #   run: |
-      #     echo "Listing files in $GITHUB_WORKSPACE"
-      #     ls -lart $GITHUB_WORKSPACE
+      - name: List files in GITHUB_WORKSPACE
+        run: |
+          echo "Listing files in $GITHUB_WORKSPACE"
+          ls -lart $GITHUB_WORKSPACE
 
-      # - name: Apply CA Cluster Issuer
-      #   run: |
-      #     kubectl apply -f  ${{ github.workspace }}/cluster-issuer.yaml -n cert-manager
+      - name: Apply CA Cluster Issuer
+        run: |
+          kubectl apply -f  ${{ github.workspace }}/cluster-issuer.yaml -n cert-manager
 
-      # - name: Apply Services
-      #   run: |
-      #     kubectl apply -f ${{ github.workspace }}/service/app1.yaml -n application
-      #     kubectl apply -f ${{ github.workspace }}/service/app2.yaml -n application
+      - name: Apply Services
+        run: |
+          kubectl apply -f ${{ github.workspace }}/service/app1.yaml -n application
+          kubectl apply -f ${{ github.workspace }}/service/app2.yaml -n application
 
-      # - name: Apply Deployment
-      #   run: |
-      #     kubectl apply -f ${{ github.workspace }}/deployment/deployment.yaml -n application
-      #     kubectl apply -f ${{ github.workspace }}/deployment/deployment2.yaml -n application
+      - name: Apply Deployment
+        run: |
+          kubectl apply -f ${{ github.workspace }}/deployment/deployment.yaml -n application
+          kubectl apply -f ${{ github.workspace }}/deployment/deployment2.yaml -n application
 
-      # - name: Apply Ingress
-      #   run: |
-      #     kubectl apply -f ${{ github.workspace }}/ingress/ingress-app1.yaml -n application
+      - name: Apply Ingress
+        run: |
+          kubectl apply -f ${{ github.workspace }}/ingress/ingress-app1.yaml -n application
 
       - name: Listar todas pods
         run: |
