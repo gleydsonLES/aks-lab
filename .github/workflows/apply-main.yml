@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'terraform/**'
+      - 'aks/**'
 
 jobs:
   plan-dev:
@@ -15,8 +15,7 @@ jobs:
       output1: ${{ steps.set_aks.outputs.aks_cluster_name }}
       output2: ${{ steps.set_aks.outputs.resource_group_name }}
     env:
-      TF_WORKING_DIR: 'terraform'
-      CLUSTER_ISSUER: ./cluster-issuer.yaml
+      TF_WORKING_DIR: 'aks'
 
 
     defaults:
@@ -74,7 +73,7 @@ jobs:
           echo "::set-output name=resource_group_name::$GROUP_NAME"
 
   kubectl-setup:
-    name: 'Instalação do kubectl'
+    name: 'Setup NGINX+CERT-MANAGER+APP'
     needs: 
       - plan-dev
     runs-on: ubuntu-latest
@@ -153,7 +152,6 @@ jobs:
         run: |
           helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2
 
-      
       - name: List files in GITHUB_WORKSPACE
         run: |
           echo "Listing files in $GITHUB_WORKSPACE"
@@ -162,6 +160,20 @@ jobs:
       - name: Apply CA Cluster Issuer
         run: |
           kubectl apply -f  ${{ github.workspace }}/cluster-issuer.yaml -n cert-manager
+
+      - name: Apply Services
+        run: |
+          kubectl apply -f ${{ github.workspace }}service/app1.yaml -n application
+          kubectl apply -f ${{ github.workspace }}service/app2.yaml -n application
+
+      - name: Apply Deployment
+        run: |
+          kubectl apply -f ${{ github.workspace }}deployment/deployment.yaml -n application
+          kubectl apply -f ${{ github.workspace }}deployment/deployment2.yaml -n application
+
+      - name: Apply Ingress
+        run: |
+          kubectl apply -f ${{ github.workspace }}ingress/ingress-app1.yaml -n application
 
       - name: Listar todas pods
         run: |
