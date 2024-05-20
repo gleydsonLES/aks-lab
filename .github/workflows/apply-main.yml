@@ -132,7 +132,7 @@ jobs:
       - name: Export IP
         run: |
           export IP=$(az network public-ip list --query "[?starts_with(name, 'kubernetes')].{Name: name, PublicIP: ipAddress}" --output tsv | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
-          echo $IP
+          printenv | grep IP
 
       - name: Usar Helm para fazer deploy do  NGINX ingress controller
         run: |
@@ -142,7 +142,7 @@ jobs:
           --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
           --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
           --set controller.service.externalTrafficPolicy=Local \
-          --set controller.service.loadBalancerIP="$IP"
+          --set controller.service.loadBalancerIP=$IP
 
       - name: Desativar validacao de recurso do cert-manager
         run: |
