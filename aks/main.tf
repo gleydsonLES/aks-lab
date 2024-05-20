@@ -4,7 +4,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "AKS-LAB"
+  name     = "LAB-AKS"
   location = "eastus2"
 }
 
@@ -25,6 +25,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   tags = {
-    environment = "labb"
+    environment = "lab"
   }
 }
