@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "AKS"
+  name     = "MY-CLUSTER"
   location = "eastus2"
 }
 
