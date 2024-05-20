@@ -151,9 +151,9 @@ jobs:
         run: |
           helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2
 
-      - name: Criar CA Cluster Issuer
+      - name: Apply CA Cluster Issuer
         run: |
-          kubectl apply -f cluster-issuer.yaml -n cert-manager
+          kubectl apply -f aks-lab/cluster-issuer.yaml -n cert-manager
 
       - name: Listar todas pods
         run: |
