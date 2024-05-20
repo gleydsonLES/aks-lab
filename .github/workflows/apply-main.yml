@@ -133,9 +133,13 @@ jobs:
         run: |
           export IP=$(az network public-ip list --query "[].ipAddress" --output tsv)
           printenv | grep IP
-          echo $IP
+          echo "IP=$IP" >> $GITHUB_ENV
 
-      - name: Usar Helm para fazer deploy do  NGINX ingress controller
+      - name: Print the IP
+        run: |
+          echo "Captured IP: ${{ env.IP }}"
+
+      - name: Usar Helm para fazer deploy do  NGINX ingress controller e setar o ip o Balancer
         run: |
           helm install ingress-nginx ingress-nginx/ingress-nginx \
           --namespace ingress \
@@ -143,7 +147,7 @@ jobs:
           --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
           --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
           --set controller.service.externalTrafficPolicy=Local \
-          --set controller.service.loadBalancerIP=$IP
+          --set controller.service.loadBalancerIP=${{ env.IP }}
 
       - name: Desativar validacao de recurso do cert-manager
         run: |
