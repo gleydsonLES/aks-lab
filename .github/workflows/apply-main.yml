@@ -151,6 +151,12 @@ jobs:
         run: |
           helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2
 
+      
+      - name: List files in GITHUB_WORKSPACE
+        run: |
+          echo "Listing files in $GITHUB_WORKSPACE"
+          ls -lart $GITHUB_WORKSPACE
+
       - name: Apply CA Cluster Issuer
         run: |
           kubectl apply -f  ${{ github.workspace }}/cluster-issuer.yaml -n cert-manager
