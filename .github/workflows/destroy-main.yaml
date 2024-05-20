@@ -6,7 +6,7 @@ on:
       dir:
         description: 'Destroy Resource'
         required: true
-        default: 'terraform'
+        default: 'aks'
 
 jobs:
   destroy-ec2:
