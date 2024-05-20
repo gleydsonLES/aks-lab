@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "AKS"
+  name     = "AKS-teste"
   location = "eastus2"
 }
 

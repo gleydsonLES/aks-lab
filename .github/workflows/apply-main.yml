@@ -97,6 +97,36 @@ jobs:
           cluster-name: ${{ needs.plan-dev.outputs.output1 }}
           admin: 'false'
 
-      - name: Run kubectl
+      - name: Create NS
         run: |
-          kubectl get pods -ALL
+          kubectl create namespace ingress
+          kubectl create namespace cert-manager
+          kubectl create namespace application
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Add ingress-nginx Helm Repo
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+      - name: Update Helm Repos
+        run: |
+          helm repo update
+
+      - name: Update Helm Repos
+        run: |
+          export IP=$(az network public-ip list --query "[].{Name: name, PublicIP: ipAddress}" --output tsv | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+
+      - name: Usar Helm para fazer deploy do  NGINX ingress controller
+        run: |
+          helm install ingress-nginx ingress-nginx/ingress-nginx \
+          --namespace ingress \
+          --set controller.replicaCount=1 \
+          --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+          --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+          --set controller.service.externalTrafficPolicy=Local \
+          --set controller.service.loadBalancerIP="$IP"
