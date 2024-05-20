@@ -153,36 +153,36 @@ jobs:
           helm repo add jetstack https://charts.jetstack.io
           helm repo update
       
-      - name: Instalar os CRDs 
-        run: |
-          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.1/cert-manager.crds.yaml
+      # - name: Instalar os CRDs 
+      #   run: |
+      #     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.1/cert-manager.crds.yaml
 
-      - name: Instalar cert-manager helm charts
-        run: |
-          helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2
+      # - name: Instalar cert-manager helm charts
+      #   run: |
+      #     helm install cert-manager jetstack/cert-manager -n cert-manager --version v1.7.2
 
-      - name: List files in GITHUB_WORKSPACE
-        run: |
-          echo "Listing files in $GITHUB_WORKSPACE"
-          ls -lart $GITHUB_WORKSPACE
+      # - name: List files in GITHUB_WORKSPACE
+      #   run: |
+      #     echo "Listing files in $GITHUB_WORKSPACE"
+      #     ls -lart $GITHUB_WORKSPACE
 
-      - name: Apply CA Cluster Issuer
-        run: |
-          kubectl apply -f  ${{ github.workspace }}/cluster-issuer.yaml -n cert-manager
+      # - name: Apply CA Cluster Issuer
+      #   run: |
+      #     kubectl apply -f  ${{ github.workspace }}/cluster-issuer.yaml -n cert-manager
 
-      - name: Apply Services
-        run: |
-          kubectl apply -f ${{ github.workspace }}/service/app1.yaml -n application
-          kubectl apply -f ${{ github.workspace }}/service/app2.yaml -n application
+      # - name: Apply Services
+      #   run: |
+      #     kubectl apply -f ${{ github.workspace }}/service/app1.yaml -n application
+      #     kubectl apply -f ${{ github.workspace }}/service/app2.yaml -n application
 
-      - name: Apply Deployment
-        run: |
-          kubectl apply -f ${{ github.workspace }}/deployment/deployment.yaml -n application
-          kubectl apply -f ${{ github.workspace }}/deployment/deployment2.yaml -n application
+      # - name: Apply Deployment
+      #   run: |
+      #     kubectl apply -f ${{ github.workspace }}/deployment/deployment.yaml -n application
+      #     kubectl apply -f ${{ github.workspace }}/deployment/deployment2.yaml -n application
 
-      - name: Apply Ingress
-        run: |
-          kubectl apply -f ${{ github.workspace }}/ingress/ingress-app1.yaml -n application
+      # - name: Apply Ingress
+      #   run: |
+      #     kubectl apply -f ${{ github.workspace }}/ingress/ingress-app1.yaml -n application
 
       - name: Listar todas pods
         run: |

@@ -4,7 +4,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "LAB-AKS"
+  name     = "AKS-LAB"
   location = "eastus2"
 }
 
