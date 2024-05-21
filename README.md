@@ -6,6 +6,9 @@ Visão Geral
 A pipeline do GitHub Actions definida neste repositório realiza as seguintes tarefas:
 
 Criação de um cluster AKS usando Terraform.
+
 Configuração do NGINX Ingress Controller.
+
 Instalação do Cert-Manager.
+
 Deploy de uma aplicação.
